@@ -3,6 +3,19 @@ import numpy
 
 
 '''
+    Cost function as J(theta).
+    The cost function defines a convex function that have only one minimum (global and local).
+'''
+def cost_function_loop(i, theta, features, y):
+    return 0
+
+
+def cost_function(theta, features, y):
+    m = len(features)
+    h = hypothesis(theta, features)
+    return (1/(2*m))*sum(numpy.square(h-y))
+
+'''
     Solves the derivated cost_function of giving training set.
     The features of the training set must be minimized and normalized with
     first column of matrix to 1 as xi0 = 1
@@ -12,7 +25,7 @@ import numpy
     :arg alpha learning rate
     :arg y_vector solutions of our training set
 '''
-def cost_function(theta_vector, j, features, alpha, y_vector):
+def minimize_theta_loop(theta_vector, j, features, alpha, y_vector):
     theta_j = theta_vector[j]
     m = len(features)
     value = 0
@@ -24,6 +37,12 @@ def cost_function(theta_vector, j, features, alpha, y_vector):
     return theta_j-alpha*(value/m)
 
 
+def minimized_theta(theta, features, alpha, y):
+    m = len(features)
+    delta = (numpy.matmul((hypothesis(theta, features)-y), features))/m
+    return theta-alpha*delta
+
+
 '''
     hypothesis for linear regression multivariate. h(theta) = theta0 + theta1*x1 + ... + thetaN*xN
     As we have x0 = 1 (always) we have two vectors of same dimension (n+1)x1. If transpose theta vector
@@ -32,7 +51,11 @@ def cost_function(theta_vector, j, features, alpha, y_vector):
     value for h(theta_i).
 '''
 def hypothesis(theta_values, feature):
-    return numpy.matmul(numpy.transpose(theta_values), feature)
+    return numpy.matmul(numpy.transpose(theta_values), numpy.transpose(feature))
+
+
+def hypothesis_loop(theta_values, feature, i):
+    return 0
 
 
 def normal_equation(features, y_vector):

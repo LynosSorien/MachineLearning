@@ -2,7 +2,7 @@ import numpy as np
 import utils as utils
 
 
-class GradientDescent():
+class GradientDescent:
     def __init__(self, alpha, training_features, training_values, min_diff=0.0001, debug=False):
         self.alpha = alpha
         self.debug = debug
@@ -29,30 +29,18 @@ class GradientDescent():
         self.training_features = np.matrix.transpose(self.T)
 
     def lrm_descent(self):
-        new_theta = self.theta_values
-        # diff = abs(sum(new_theta)-sum(self.theta_values))
-        diff = self.min_diff+1
-        while diff > self.min_diff:
-            self.theta_values = new_theta.copy()
-            new_theta, cost_diff = self.cost_function()
-            if self.first_theta is None:
-                self.first_theta = new_theta.copy()
-            # diff = abs(sum(new_theta) - sum(self.theta_values))
-            diff = abs(sum(cost_diff))
-            if self.debug:
-                print(new_theta)
-                print("Difference", diff)
-        self.theta_values = new_theta
-        return self.theta_values
-
-    def cost_function(self):
-        new_theta = []
-        j_diff = []
-        for j in range(len(self.theta_values)):
-            theta = utils.cost_function(self.theta_values, j, self.training_features, self.alpha, self.training_values)
-            new_theta.append(theta)
-            j_diff.append(abs(theta-self.theta_values[j]))
-        return new_theta, j_diff
+        J = 9999999999
+        self.theta_values = [1] * (len(self.training_values) + 1)
+        X = self.training_features
+        if not all(np.transpose(X)[0]) == 1:
+            X = np.transpose(np.insert(np.transpose(X), 0, [1]*(len(self.training_values)), axis=0))
+        new_cost = utils.cost_function(self.theta_values, X, self.training_values)
+        while new_cost > self.min_diff:
+            J = new_cost
+            self.theta_values = utils.minimized_theta(self.theta_values, X, self.alpha, self.training_values)
+            new_cost = utils.cost_function(self.theta_values, X, self.training_values)
+        J = new_cost
+        return J
 
     def use_function(self, vector):
         vector = np.insert(vector, 0, 1)
@@ -75,7 +63,14 @@ features = np.array(
     ])
 
 y = np.array([2, 3, 4]).astype(float)
-alpha = 0.1
-gd = GradientDescent(alpha, features, y, min_diff=0, debug=True)
-gd.lrm_descent()
+alpha = 0.01
+gd = GradientDescent(alpha, features, y, min_diff=0.000001, debug=True)
+gd.feature_scaling()
+print("Final Cost =", gd.lrm_descent())
+print("Predicted result for [5, 1500, 2] =", gd.use_function([5, 1500, 2]), "True result is 2. The difference is =",
+      2 - gd.use_function([5, 1500, 2]))
+print("Predicted result for [3, 5200, 3] =", gd.use_function([3, 5200, 3]), "True result is 3. The difference is =",
+      3 - gd.use_function([3, 5200, 3]))
+print("Predicted result for [3, 7001, 6] =", gd.use_function([3, 7001, 6]), "True result is 4. The difference is =",
+      4 - gd.use_function([3, 7001, 6]))
 ne_theta = utils.normal_equation(features, y)
