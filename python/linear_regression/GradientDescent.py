@@ -29,17 +29,14 @@ class GradientDescent:
         self.training_features = np.matrix.transpose(self.T)
 
     def lrm_descent(self):
-        J = 9999999999
         self.theta_values = [1] * (len(self.training_values) + 1)
         X = self.training_features
         if not all(np.transpose(X)[0]) == 1:
             X = np.transpose(np.insert(np.transpose(X), 0, [1]*(len(self.training_values)), axis=0))
-        new_cost = utils.cost_function(self.theta_values, X, self.training_values)
-        while new_cost > self.min_diff:
-            J = new_cost
+        J = utils.cost_function(self.theta_values, X, self.training_values)
+        while J > self.min_diff:
             self.theta_values = utils.minimized_theta(self.theta_values, X, self.alpha, self.training_values)
-            new_cost = utils.cost_function(self.theta_values, X, self.training_values)
-        J = new_cost
+            J = utils.cost_function(self.theta_values, X, self.training_values)
         return J
 
     def use_function(self, vector):

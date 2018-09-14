@@ -37,6 +37,17 @@ def minimize_theta_loop(theta_vector, j, features, alpha, y_vector):
     return theta_j-alpha*(value/m)
 
 
+'''
+    Solves the derivated cost_function of giving training set.
+    The features of the training set must be minimized and normalized with
+    first column of matrix to 1 as xi0 = 1
+    Vectorized form
+    :arg theta_vector theta values of hypothesis and cost function
+    :arg j current j iteration (of theta values)
+    :arg features var values of our training set
+    :arg alpha learning rate
+    :arg y_vector solutions of our training set
+'''
 def minimized_theta(theta, features, alpha, y):
     m = len(features)
     delta = (numpy.matmul((hypothesis(theta, features)-y), features))/m
