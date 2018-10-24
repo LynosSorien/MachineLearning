@@ -1,5 +1,6 @@
 from __future__ import division
 import numpy
+import math
 
 
 '''
@@ -14,6 +15,7 @@ def cost_function(theta, features, y):
     m = len(features)
     h = hypothesis(theta, features)
     return (1/(2*m))*sum(numpy.square(h-y))
+
 
 '''
     Solves the derivated cost_function of giving training set.
@@ -102,4 +104,11 @@ def feature_scaling_corrector(feature, corrector):
         return float(feature)/float(corrector[2])
     return (float(feature)-corrector[0])/float(corrector[1])
 
+
+def sigmoid(theta, X):
+    return sigmoid(hypothesis(theta, X))
+
+
+def sigmoid(z):
+    return 1/(1+math.e ^ (-z))
 
